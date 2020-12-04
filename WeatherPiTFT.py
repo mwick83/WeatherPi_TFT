@@ -822,7 +822,6 @@ def get_brightness():
     current_time = time.time()
     current_hour = int(convert_timestamp(current_time, '%H'))
 
-    return 25 if current_time >= 20 or current_time <= 5 else 100
     brightness = PWM_DIMMED_VAL if current_hour >= DIM_START_HOUR or current_hour <= DIM_END_HOUR else PWM_ON_VAL
 
     return brightness
