@@ -93,3 +93,6 @@ ENV/
 /logs/latest_weather.json
 /default.theme
 /docs/
+
+# VS Code project settings
+.vscode
