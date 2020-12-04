@@ -144,6 +144,11 @@ if PWM:
 else:
     logger.info('no PWM for brightness control configured')
 
+PWM_ON_VAL = int(config['DISPLAY']['PWM_ON_VAL'])
+PWM_DIMMED_VAL = int(config['DISPLAY']['PWM_DIMMED_VAL'])
+DIM_START_HOUR = int(config['DISPLAY']['DIM_START_HOUR'])
+DIM_END_HOUR = int(config['DISPLAY']['DIM_END_HOUR'])
+
 
 # display settings from theme config
 DISPLAY_WIDTH = int(config["DISPLAY"]["WIDTH"])
@@ -513,11 +518,6 @@ class Update(object):
     @staticmethod
     def update_json():
 
-        if PWM:
-            brightness = get_brightness()
-            os.system(f'gpio -g pwm {PWM} {brightness}') if PWM is not False else logger.info('not setting pwm')
-            logger.info(f'set brightness: {brightness}, pwm configured: {PWM}')
-
         global THREADS, CONNECTION_ERROR, CONNECTION
 
         thread = threading.Timer(config["TIMER"]["UPDATE"], Update.update_json)
@@ -816,12 +816,16 @@ class Update(object):
         Update.update_json()
         Update.read_json()
 
-
 def get_brightness():
+    brightness = 0
+
     current_time = time.time()
-    current_time = int(convert_timestamp(current_time, '%H'))
+    current_hour = int(convert_timestamp(current_time, '%H'))
 
     return 25 if current_time >= 20 or current_time <= 5 else 100
+    brightness = PWM_DIMMED_VAL if current_hour >= DIM_START_HOUR or current_hour <= DIM_END_HOUR else PWM_ON_VAL
+
+    return brightness
 
 
 def convert_timestamp(timestamp, param_string):
@@ -948,6 +952,7 @@ def loop():
     Update.run()
 
     running = True
+    last_brightness = None
 
     while running:
         tft_surf.fill(BACKGROUND)
@@ -1018,6 +1023,14 @@ def loop():
 
         # update the display with all surfaces merged into the main one
         pygame.display.update()
+
+        # update display brightness
+        if PWM:
+            brightness = get_brightness()
+            if (last_brightness is None) or (last_brightness != brightness):
+                os.system(f'gpio -g pwm {PWM} {brightness}') if PWM is not False else logger.info('not setting pwm')
+                logger.info(f'set brightness: {brightness}, pwm configured: {PWM}')
+            last_brightness = brightness
 
         # do it as often as FPS configured (30 FPS recommend for particle simulation, 15 runs fine too, 60 is overkill)
         clock.tick(FPS)

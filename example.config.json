@@ -10,6 +10,11 @@
     "SHOW_FPS": false,
     "SHOW_API_STATS": true,
     "MOUSE": false
+    "MOUSE": false,
+    "PWM_ON_VAL": 100,
+    "PWM_DIMMED_VAL": 25,
+    "DIM_START_HOUR": 20,
+    "DIM_END_HOUR": 5,
   },
   "WEATHERBIT_URL": "https://api.weatherbit.io/v2.0",
   "WEATHERBIT_IO_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxx",
