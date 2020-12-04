@@ -114,6 +114,9 @@ except Exception as e:
     quit()
 
 
+last_touch_time = time.time()
+last_touch_time_stored = last_touch_time
+
 pygame.display.init()
 pygame.mixer.quit()
 pygame.font.init()
@@ -146,8 +149,10 @@ else:
 
 PWM_ON_VAL = int(config['DISPLAY']['PWM_ON_VAL'])
 PWM_DIMMED_VAL = int(config['DISPLAY']['PWM_DIMMED_VAL'])
+PWM_OFF_VAL = int(config['DISPLAY']['PWM_OFF_VAL'])
 DIM_START_HOUR = int(config['DISPLAY']['DIM_START_HOUR'])
 DIM_END_HOUR = int(config['DISPLAY']['DIM_END_HOUR'])
+IDLE_TIME = int(config['DISPLAY']['IDLE_TIME'])
 
 
 # display settings from theme config
@@ -817,12 +822,20 @@ class Update(object):
         Update.read_json()
 
 def get_brightness():
+    global last_touch_time
+    global last_touch_time_stored
+
     brightness = 0
 
     current_time = time.time()
     current_hour = int(convert_timestamp(current_time, '%H'))
 
     brightness = PWM_DIMMED_VAL if current_hour >= DIM_START_HOUR or current_hour <= DIM_END_HOUR else PWM_ON_VAL
+    if IDLE_TIME > 0:
+        if (last_touch_time_stored == last_touch_time) and ((current_time - last_touch_time) > float(IDLE_TIME)):
+            brightness = PWM_OFF_VAL
+
+    last_touch_time_stored = last_touch_time
 
     return brightness
 
@@ -948,6 +961,8 @@ def create_scaled_surf(surf, aa=False):
 
 
 def loop():
+    global last_touch_time
+
     Update.run()
 
     running = True
@@ -999,6 +1014,7 @@ def loop():
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
 
+                last_touch_time = time.time()
                 if pygame.MOUSEBUTTONDOWN:
                     draw_event()
 
