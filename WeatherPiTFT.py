@@ -164,7 +164,7 @@ ZOOM = 1
 FPS = config['DISPLAY']['FPS']
 AA = config['DISPLAY']['AA']
 ANIMATION = config['DISPLAY']['ANIMATION']
-
+SHOW_FPS = config['DISPLAY']['SHOW_FPS']
 
 # correction for 1:1 displays like hyperpixel4 square
 if DISPLAY_WIDTH / DISPLAY_HEIGHT == 1:
@@ -967,7 +967,7 @@ def loop():
 
         draw_statusbar()
 
-        if FPS:
+        if SHOW_FPS:
             draw_fps()
 
         if ANIMATION:
