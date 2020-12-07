@@ -742,11 +742,9 @@ class Update(object):
         new_surf = pygame.Surface((SURFACE_WIDTH, SURFACE_HEIGHT))
         new_surf.fill(BACKGROUND)
 
-        DrawImage(new_surf, images['wifi'], 5, size=15, fillcolor=RED if CONNECTION_ERROR else GREEN).left()
-        if REFRESH_ERROR:
-            DrawImage(new_surf, images['refresh'], 5, size=15, fillcolor=RED).right(8)
-        if PATH_ERROR:
-            DrawImage(new_surf, images['path'], 5, size=15, fillcolor=RED).right(-5)
+        DrawImage(new_surf, images['wifi'], 5, size=15, fillcolor=RED if CONNECTION_ERROR else DARK_GRAY).left()
+        DrawImage(new_surf, images['refresh'], 5, size=15, fillcolor=RED if REFRESH_ERROR else DARK_GRAY).right(8)
+        DrawImage(new_surf, images['path'], 5, size=15, fillcolor=RED if PATH_ERROR else DARK_GRAY).right(-5)
 
         DrawImage(new_surf, images[WEATHERICON], 68, size=100).center(2, 0, offset=10)
 
