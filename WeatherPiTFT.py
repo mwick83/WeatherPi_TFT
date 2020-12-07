@@ -803,8 +803,8 @@ class Update(object):
                     f'{day_1_ts} {day_1_min_max_temp} {FORECASTICON_DAY_1}; '
                     f'{day_2_ts} {day_2_min_max_temp} {FORECASTICON_DAY_2}; '
                     f'{day_3_ts} {day_3_min_max_temp} {FORECASTICON_DAY_3}')
-        logger.info(f'sunrise: {sunrise} ; sunset {sunset}')
-        logger.info(f'WindSpeed: {wind_speed_string}')
+        logger.info(f'sunrise: {sunrise} ; sunset: {sunset}')
+        logger.info(f'windspeed: {wind_speed_string}')
 
         # remove the ended timer and threads
         global THREADS
